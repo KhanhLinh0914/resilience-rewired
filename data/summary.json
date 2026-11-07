@@ -1,0 +1,20 @@
+{
+  "n_accounts": 4500,
+  "ei_fail_pct": 35.1,
+  "ei_fail_n": 1578,
+  "already_short_pct": 26.2,
+  "thin_spend_pct": 54.0,
+  "days_below_zero_pct": 2.3,
+  "median_buffer": 22325.1,
+  "median_ei_gap": 3274.93,
+  "sentence": "The median buffer is $22,325, which looks comfortable. If income falls to 55% and spending stays typical, 35% of 4,500 accounts still run out before 6 months. 54% already spend at least 90% of typical money in, so the gap under EI is large even when the balance looks healthy.",
+  "detail": "Before any shock, 26% already spend more than they take in. Among accounts that still have a monthly gap under EI, the median gap is $3,275. 2% finished at least one day below zero in the last 6 months.",
+  "samples": {
+    "teaching": 26120,
+    "safe": 91858,
+    "loan": 57107,
+    "pension": 76589
+  },
+  "duplicate_months": 0,
+  "null_money_in": 0
+}
