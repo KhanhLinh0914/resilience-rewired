@@ -1,2 +1,7 @@
 __pycache__/
 .streamlit/secrets.toml
+data/
+analysis/output/customer_table.csv
+.env
+.venv/
+.idea/
