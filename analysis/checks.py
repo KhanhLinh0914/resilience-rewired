@@ -9,8 +9,14 @@ Check 2: Does overdraft happen BEFORE the loan starts? (early warning or not)
 Check 3: Using ONLY data from before the loan, does runway predict default?
 """
 
+import os
+
+import matplotlib.pyplot as plt
 import pandas as pd
 from build_customer_table import runway
+
+CHARTS = "analysis/output/charts"
+os.makedirs(CHARTS, exist_ok=True)
 
 pd.set_option("display.width", 160)
 pd.set_option("display.max_columns", 20)
@@ -76,7 +82,34 @@ print("\nA) Everyone (original result):")
 print(by_income(t))
 
 print("\nB) Without pensioners:")
-print(by_income(t[t["pensioner"] == 0]))
+no_pen = by_income(t[t["pensioner"] == 0])
+print(no_pen)
+
+# Chart: the headline finding (pensioners excluded)
+labels = ["Lowest", "Low", "Middle", "High", "Highest"]
+vals = no_pen["share_survive_6m"].values
+colors = ["#9AA5B1"] * 5
+colors[0] = colors[-1] = "#E86A1A"
+fig, ax = plt.subplots(figsize=(8, 4.5))
+bars = ax.bar(labels, vals, color=colors)
+for b, v in zip(bars, vals):
+    ax.annotate(f"{v:.0%}", (b.get_x() + b.get_width() / 2, v),
+                ha="center", va="bottom", fontsize=12, fontweight="bold")
+ax.set_ylim(0, 1.08)
+ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f"{y:.0%}"))
+ax.set_xlabel("Income group (20% of customers each)")
+ax.set_ylabel("Outlast 6 months of EI")
+ax.set_title("Higher earners are less likely to outlast a job loss",
+             fontsize=13, fontweight="bold")
+n = int(no_pen["n"].iloc[0])
+fig.text(0.01, 0.01, f"Job loss with EI at 55% of income. Pensioners excluded; "
+         f"n = {n} customers per group.", fontsize=8, color="#555")
+for side in ["top", "right"]:
+    ax.spines[side].set_visible(False)
+plt.tight_layout(rect=(0, 0.04, 1, 1))
+plt.savefig(f"{CHARTS}/5_survive_by_income_no_pensioners.png", dpi=200)
+plt.close()
+print(f"Chart saved: {CHARTS}/5_survive_by_income_no_pensioners.png")
 
 # C) Fairer job-loss shock: pension income is NOT lost, only the rest
 def jobloss_keep_pension(p):
